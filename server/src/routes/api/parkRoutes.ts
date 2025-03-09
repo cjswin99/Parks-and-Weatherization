@@ -1,4 +1,5 @@
 import express from 'express';
+<<<<<<< HEAD
 import dotenv from 'dotenv';
 dotenv.config()
 
@@ -8,6 +9,24 @@ router.get('/', async (req, res) => {
   const response = await fetch(`${process.env.NPS_API_BASE_URL} `)
 })
   
+=======
+import parkService from '../../service/parkService.js';
+
+const router = express.Router();
+
+router.get('/:state', async (req, res) => {
+  try {
+    const targetState = req.params.state;
+
+    const parks = await parkService.getParksByState(targetState)
+
+
+    res.json(parks)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch weather data' });
+  }
+});
+>>>>>>> cc939d237484e986441555b36d0a443d737fb5de
 
 export default router;
 

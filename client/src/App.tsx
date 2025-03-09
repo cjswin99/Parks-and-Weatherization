@@ -27,17 +27,17 @@ export default App;
 import Cart from './components/Cart'
 */}
 
-function App() {
+// function App() {
 
-  return (
-    <>
-      {/*<CartProvider>*/}
-        <Navbar />
-        {/*<Cart />*/}
-        <Outlet />
-      {/*</CartProvider>*/}
-    </>
-  )
-}
+//   return (
+//     <>
+//       {/*<CartProvider>*/}
+//         <Navbar />
+//         {/*<Cart />*/}
+//         <Outlet />
+//       {/*</CartProvider>*/}
+//     </>
+//   )
+// }
 
-export default App
+// export default App

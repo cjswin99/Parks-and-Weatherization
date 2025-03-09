@@ -9,7 +9,7 @@ const ParkSearch = () => {
   // Fetch parks from Express API
   const fetchParks = async () => {
     try {
-      const response = await fetch(`/api/parks?state=${state}`);
+      const response = await fetch(`/api/park/${state}`);
       const data = await response.json();
       setParks(data);
     } catch (error) {
@@ -49,8 +49,10 @@ const ParkSearch = () => {
           <h3 className="text-lg font-semibold">Select a Park:</h3>
           <ul>
             {parks.map((park) => (
-              <li key={park} className="cursor-pointer text-blue-600" onClick={() => fetchWeather(park)}>
-                {park}
+              <li key={park.id} className="cursor-pointer text-blue-600" 
+              // onClick={() => fetchWeather(park)}
+              >
+                {park.fullName}
               </li>
             ))}
           </ul>
