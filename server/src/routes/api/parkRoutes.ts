@@ -1,23 +1,44 @@
 import express from 'express';
-import Park from '../models/Park';
-import { getParksData } from '../api/parksApi'; // Optionally, still fetch from an external API if needed
+import { getParksData } from '../api/parksApi';
+import Park from '../models/Parks'; // Ensure the correct relative path to your Parks.ts file
 
 const router = express.Router();
 
+// GET route to fetch parks by state
 router.get('/', async (req, res) => {
   try {
     const state = req.query.state as string;
     if (!state) return res.status(400).json({ error: "State is required" });
 
-    // Option 1: Fetch from external API then store/update in DB
-    const externalData = await getParksData(state);
-    // You can add logic here to upsert parks into your database using Park.upsert(...)
-
-    // Option 2: Query parks from the database directly
-    const parks = await Park.findAll({ where: { state } });
-    res.json(parks);
+    const data = await getParksData(state); // Fetch data from external API
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch parks data' });
+  }
+});
+
+// POST route to add a new park to the database
+router.post('/', async (req, res) => {
+  try {
+    const { park_id, name, city, state, latitude, longitude } = req.body;
+
+    if (!park_id || !name || !state || latitude === undefined || longitude === undefined) {
+      return res.status(400).json({ error: "Missing required park fields" });
+    }
+
+    const newPark = await Park.create({
+      park_id,
+      name,
+      city,
+      state,
+      latitude,
+      longitude,
+    });
+
+    res.status(201).json(newPark);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create park' });
   }
 });
 
