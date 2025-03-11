@@ -9,6 +9,8 @@ interface Park {
   url: string;
   designation: string;
   images: ParkImage[];
+  latitude: string;
+  longitude: string;
 }
 
 interface ParkImage {
@@ -31,12 +33,14 @@ class ParkService {
   async getParksByState(state: string) {
     try {
       const response = await fetch(
-        `${this.baseURL}/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`
+        // `${this.baseURL}/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`
+        `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`
       );
 
       const parks = await response.json();
 
       const mappedParks = await this.parkDataMapping(parks.data);
+ 
       return mappedParks;
     } catch (err) {
       console.log('Error:', err);
@@ -53,6 +57,8 @@ class ParkService {
         url: park.url,
         designation: park.designation,
         images: park.images,
+        latitude: park.latitude,
+        longitude: park.longitude
       };
 
       return parkObject;
@@ -64,3 +70,13 @@ class ParkService {
 
   
 export default new ParkService();
+
+
+
+
+
+
+
+
+
+

@@ -8,7 +8,9 @@ class ParkService {
     }
     async getParksByState(state) {
         try {
-            const response = await fetch(`${this.baseURL}/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`);
+            const response = await fetch(
+            // `${this.baseURL}/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`
+            `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${state}&api_key=12X6TXSVMeTtqAFYoPLdCbwqqP6FIAbDKhiDsyKK`);
             const parks = await response.json();
             const mappedParks = await this.parkDataMapping(parks.data);
             return mappedParks;
@@ -27,6 +29,8 @@ class ParkService {
                 url: park.url,
                 designation: park.designation,
                 images: park.images,
+                latitude: park.latitude,
+                longitude: park.longitude
             };
             return parkObject;
         });

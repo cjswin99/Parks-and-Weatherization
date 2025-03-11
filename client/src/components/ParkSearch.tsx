@@ -5,6 +5,8 @@ const ParkSearch = () => {
   const [state, setState] = useState('');
   const { selectedPark, setSelectedPark, setWeather } = usePark();
   const [parks, setParks] = useState<string[]>([]);
+
+  const [weatherToDisplay, setWeatherToDisplay] = useState({});
   
   // Fetch parks from Express API
   const fetchParks = async () => {
@@ -50,7 +52,21 @@ const ParkSearch = () => {
           <ul>
             {parks.map((park) => (
               <li key={park.id} className="cursor-pointer text-blue-600" 
-              // onClick={() => fetchWeather(park)}
+              onClick={() => {
+                const lat = park.latitude;
+                const lon = park.longitude;
+
+                console.log(lat, lon);
+
+                fetch(`/api/weather/${lat}/${lon}`)
+                .then(res => res.json())
+                .then(data => {
+                  console.log(data);
+                  setSelectedPark(park.fullName)
+
+                  setWeatherToDisplay(data)
+                })
+              }}
               >
                 {park.fullName}
               </li>
@@ -62,7 +78,12 @@ const ParkSearch = () => {
       {selectedPark && (
         <div className="mt-4 p-3 bg-white shadow rounded">
           <h3 className="text-lg font-bold">{selectedPark} Weather</h3>
-          <WeatherDisplay />
+          {/* <WeatherDisplay /> */}
+          <div>
+            <h4>Temperature: {weatherToDisplay.main.temp}</h4>
+            <h4>Humidity: {weatherToDisplay.main.humidity}</h4>
+            <h4>Wind Speed: {weatherToDisplay.wind.speed}</h4>
+        </div>
         </div>
       )}
     </div>
