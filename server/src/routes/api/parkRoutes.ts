@@ -1,17 +1,23 @@
 import express from 'express';
-import { getParksData } from '../api/parksApi';
-import Park from '../models/Parks'; // Ensure the correct relative path to your Parks.ts file
+import Park from '../../models/Parks.js'; // Ensure the correct relative path to your Parks.ts file
+import parkService from '../../service/parkService.js';
 
 const router = express.Router();
 
 // GET route to fetch parks by state
-router.get('/', async (req, res) => {
+router.get('/:state', async (req, res) => {
   try {
-    const state = req.query.state as string;
-    if (!state) return res.status(400).json({ error: "State is required" });
+    const targetState = req.params.state;
 
-    const data = await getParksData(state); // Fetch data from external API
-    res.json(data);
+    const parks: any = await parkService.getParksByState(targetState)
+
+    // save the parks data to the database
+    parks.forEach(async (park: any) => {
+      await Park.create(park);
+    });
+
+
+    res.json(parks)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch parks data' });
   }

@@ -1,16 +1,26 @@
+import dotenv from "dotenv"
 import express from 'express';
-import { getWeatherData } from '../api/weatherApi';
-import Weather from '../models/Weather';
+// import { getWeatherData } from '../api/weatherApi';
+import Weather from '../../models/Weather.js';
+dotenv.config();
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/:lat/:lon', async (req, res) => {
   try {
-    const location = req.query.location as string;
-    if (!location) return res.status(400).json({ error: "Location is required" });
 
-    const data = await getWeatherData(location);
-    res.json(data);
+    const lat = req.params.lat;
+    const lon = req.params.lon;
+
+    if (!lat || !lon) return res.status(400).json({ error: "Location is required" });
+
+    const apiKey = process.env.WEATHER_API_KEY;
+
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+    const data = await response.json();
+
+    res.json(data)
+
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch weather data' });
   }
