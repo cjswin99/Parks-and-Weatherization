@@ -1,14 +1,14 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/db.js';
+import sequelize from '../config/connection.js';
 
 class Park extends Model {}
 
 Park.init({
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
+  // id: {
+  //   type: DataTypes.INTEGER,
+  //   autoIncrement: true,
+  //   primaryKey: true,
+  // },
   park_id: {
     type: DataTypes.STRING,
     unique: true,
