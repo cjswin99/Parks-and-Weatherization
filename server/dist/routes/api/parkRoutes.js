@@ -1,5 +1,5 @@
 import express from 'express';
-import Park from '../../models/parks.js'; // Ensure the correct relative path to your Parks.ts file
+// import {Park} from '../../models/index.js'; // Ensure the correct relative path to your Parks.ts file
 import parkService from '../../service/parkService.js';
 const router = express.Router();
 // GET route to fetch parks by state
@@ -8,9 +8,9 @@ router.get('/:state', async (req, res) => {
         const targetState = req.params.state;
         const parks = await parkService.getParksByState(targetState);
         // save the parks data to the database
-        parks.forEach(async (park) => {
-            await Park.create(park);
-        });
+        // parks.forEach(async (park: any) => {
+        //   await Park.create(park);
+        // });
         res.json(parks);
     }
     catch (error) {
@@ -24,15 +24,16 @@ router.post('/', async (req, res) => {
         if (!park_id || !name || !state || latitude === undefined || longitude === undefined) {
             return res.status(400).json({ error: "Missing required park fields" });
         }
-        const newPark = await Park.create({
-            park_id,
-            name,
-            city,
-            state,
-            latitude,
-            longitude,
-        });
-        res.status(201).json(newPark);
+        // const newPark = await Park.create({
+        //   park_id,
+        //   name,
+        //   city,
+        //   state,
+        //   latitude,
+        //   longitude,
+        // });
+        // res.status(201).json(newPark);
+        res.status(201).json({ message: "Hello" });
     }
     catch (error) {
         console.error(error);

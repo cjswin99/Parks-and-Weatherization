@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 import express from 'express';
 // import { getWeatherData } from '../api/weatherApi';
-import Weather from '../../models/Weather.js';
+// import {Weather} from '../../models/index.js';
 dotenv.config();
 
 const router = express.Router();
@@ -34,12 +34,13 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: "Missing required weather fields" });
     }
 
-    const newWeather = await Weather.create({
-      park_id,
-      forecast,
-    });
+    // const newWeather = await Weather.create({
+    //   park_id,
+    //   forecast,
+    // });
 
-    res.status(201).json(newWeather);
+    // res.status(201).json(newWeather);
+    res.status(201).json({message: "Hello"})
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to add weather forecast' });
