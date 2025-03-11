@@ -1,5 +1,5 @@
 import express from 'express';
-import Park from '../../models/Parks.js'; // Ensure the correct relative path to your Parks.ts file
+import Park from '../../models/parks.js'; // Ensure the correct relative path to your Parks.ts file
 import parkService from '../../service/parkService.js';
 
 const router = express.Router();
