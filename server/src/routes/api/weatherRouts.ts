@@ -16,7 +16,7 @@ router.get('/:lat/:lon', async (req, res) => {
 
     const apiKey = process.env.WEATHER_API_KEY;
 
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
     const data = await response.json();
 
     res.json(data)
