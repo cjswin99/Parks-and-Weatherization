@@ -1,19 +1,21 @@
-import express from 'express';
-// import sequelize from "./config/connection.js"
-// import parksRoutes from './routes/api/parkRoutes.js';
-// import weatherRoutes from './routes/api/weatherRouts.js';
-import routes from './routes/index.js';
+import dotenv from "dotenv";
+dotenv.config(); // Load .env variables before other imports
+import express from "express";
+//import cors from "cors";
+import parkRoutes from "./routes/api/parkRoutes.js";
+import weatherRoutes from "./routes/api/weatherRoutes.js";
+import authRoutes from "./routes/api/authRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3001;
+// Enable CORS Middleware
+//app.use(cors());
+// Enable JSON & URL Encoding Middleware
 app.use(express.json());
-// app.use('/api/parks', parksRoutes);
-// app.use('/api/weather', weatherRoutes);
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
-app.use(routes);
-// sequelize.sync({force: true}).then(() => {
+app.use(express.urlencoded({ extended: true }));
+// Use API Routes
+app.use("/api/parks", parkRoutes);
+app.use("/api/weather", weatherRoutes);
+app.use("/api/auth", authRoutes);
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
-// });

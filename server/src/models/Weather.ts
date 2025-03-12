@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/connection.js';
+import sequelize from "../db/config/connection.js";
 // import Park from './parks.js';
 
 class Weather extends Model {}

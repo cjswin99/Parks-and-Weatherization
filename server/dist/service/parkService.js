@@ -10,7 +10,7 @@ class ParkService {
         try {
             const response = await fetch(
             // `${this.baseURL}/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`
-            `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${state}&api_key=12X6TXSVMeTtqAFYoPLdCbwqqP6FIAbDKhiDsyKK`);
+            `https://developer.nps.gov/api/v1/parks?limit=10&stateCode=${state}&api_key=${this.apiKey}`);
             const parks = await response.json();
             const mappedParks = await this.parkDataMapping(parks.data);
             return mappedParks;

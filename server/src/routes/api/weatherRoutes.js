@@ -11,7 +11,7 @@ router.get('/:lat/:lon', async (req, res) => {
         if (!lat || !lon)
             return res.status(400).json({ error: "Location is required" });
         const apiKey = process.env.WEATHER_API_KEY;
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=0d6c36bae265fd5a3b1547522d0d6c40`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
         const data = await response.json();
         res.json(data);
     }
