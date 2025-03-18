@@ -1,27 +1,35 @@
-import dotenv from "dotenv";
-dotenv.config();  // Load .env variables before other imports
-
 import express from "express";
-//import cors from "cors";
+import dotenv from "dotenv";
+import cors from "cors";
+import sequelize from "./db/config/connection.js";
 import parkRoutes from "./routes/api/parkRoutes.js";
-import weatherRoutes from "./routes/api/weatherRoutes.js";
 import authRoutes from "./routes/api/authRoutes.js";
+import userRoutes from "./routes/api/userRoutes.js";
+import weatherRoutes from "./routes/api/weatherRoutes.js";
 
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4000;
 
-// Enable CORS Middleware
-//app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-// Enable JSON & URL Encoding Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Use API Routes
 app.use("/api/parks", parkRoutes);
-app.use("/api/weather", weatherRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/weather", weatherRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+sequelize.authenticate().then(() => {
+  console.log("✅ Database connected.");
+  return sequelize.sync();
+}).then(() => {
+  console.log("✅ Models synced.");
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}).catch((err) => console.error("❌ Server startup error:", err));

@@ -1,32 +1,24 @@
 {
 	"compilerOptions": {
-		"skipLibCheck": true,
-		/* Language and Environment */
-		"target": "ES2020",
-		/* Modules */
-		"module": "ESNext",
-		"moduleResolution": "node",
-		/* JavaScript Support */
-		"allowJs": true,
-		"checkJs": true,
-		/* Interop Constraints */
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"forceConsistentCasingInFileNames": true,
-		/* Type Checking */
-		"resolveJsonModule": true,
-		"baseUrl": "./",
-		"paths": {
-			"*": ["server/*"]
-		},
-		"rootDir": "./src",
-		"outDir": "./dist",
-		"strict": true,
-		"noFallthroughCasesInSwitch": true,
-		"exactOptionalPropertyTypes": true,
-		"noImplicitOverride": true,
-		"useUnknownInCatchVariables": true
+	  "target": "ES2020",
+	  "module": "NodeNext",
+	  "moduleResolution": "NodeNext",
+	  "baseUrl": "./src",
+	  "paths": {
+		"@middleware/*": ["middleware/*"],
+		"@routes/*": ["routes/*"],
+		"@models/*": ["models/*"],
+		"@db/*": ["db/*"]
+	  },
+	  "rootDir": "./src",
+	  "outDir": "./dist",
+	  "strict": true,
+	  "esModuleInterop": true,
+	  "allowSyntheticDefaultImports": true,
+	  "resolveJsonModule": true,
+	  "skipLibCheck": true
 	},
 	"include": ["src"],
-	"exclude": ["node_modules"]
-}
+	"exclude": ["node_modules", "dist"]
+  }
+  

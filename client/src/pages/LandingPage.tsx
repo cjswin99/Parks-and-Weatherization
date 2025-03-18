@@ -1,13 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-// Use a namespace import for jwt-decode because of Vite issues:
-import * as jwt_decode from "jwt-decode";
-
-interface JwtPayload {
-  exp?: number;
-  [key: string]: any;
-}
 
 const LandingPage: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -16,16 +9,17 @@ const LandingPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isNewUser, setIsNewUser] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   if (!authContext) {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
-  const { login, user } = authContext;
 
-  const handleLogin = async () => {
-    // Validate that all fields are provided.
+  const { register, login, logout, user } = authContext; // ✅ Ensure `logout` is included
+
+  const handleSubmit = async () => {
     if (!username.trim() || !email.trim() || !password.trim()) {
       setError("Please fill in all fields.");
       return;
@@ -33,38 +27,13 @@ const LandingPage: React.FC = () => {
     setError("");
     setLoading(true);
     try {
-      // Call the login function (which should store the JWT in localStorage).
-      await login(username, email, password);
-      setLoading(false);
-
-      // Retrieve the token from localStorage.
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("No token received. Login failed.");
-        return;
-      }
-
-      // Decode and verify the token.
-      try {
-        // Use the namespace import workaround.
-        const decodeFn = jwt_decode as unknown as (token: string) => JwtPayload;
-        const decoded = decodeFn(token);
-        // Optionally, check for token expiration.
-        if (decoded.exp && decoded.exp < Date.now() / 1000) {
-          setError("Token has expired. Please log in again.");
-          return;
-        }
-      } catch (decodeError) {
-        console.error("Error decoding token:", decodeError);
-        setError("Invalid token received.");
-        return;
-      }
-
-      console.log("Login successful, token verified. Redirecting to /parks");
-      navigate("/parks");
+      console.log(isNewUser ? "Registering..." : "Logging in...");
+      isNewUser ? await register(username, email, password) : await login(username, email, password);
+      navigate("/park"); // ✅ Redirect after login/signup
     } catch (err) {
       setLoading(false);
-      setError("Login failed. Please try again.");
+      console.error("Authentication error:", err);
+      setError("Authentication failed. Please try again.");
     }
   };
 
@@ -72,12 +41,12 @@ const LandingPage: React.FC = () => {
     <div className="container">
       <h1 className="title">Welcome to Parks and Weather</h1>
       <p className="description">
-        Enter your details below to sign up and search for parks.
+        {user ? `Welcome back, ${user}!` : "Enter your details below to sign up or log in."}
       </p>
 
       {error && <p className="error">{error}</p>}
 
-      {/* Show the login form if not logged in */}
+      {/* Show login/signup form only if no user */}
       {!user ? (
         <div className="login-container">
           <input
@@ -101,12 +70,21 @@ const LandingPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="login-input"
           />
-          <button onClick={handleLogin} className="login-button" disabled={loading}>
-            {loading ? "Logging in..." : "Sign Up"}
+          <button onClick={handleSubmit} className="login-button" disabled={loading}>
+            {loading ? "Processing..." : isNewUser ? "Sign Up" : "Log In"}
           </button>
+          <p onClick={() => setIsNewUser(!isNewUser)} className="toggle-link">
+            {isNewUser ? "Already have an account? Log in" : "Don't have an account? Sign up"}
+          </p>
         </div>
       ) : (
-        <p>Welcome, {user}!</p>
+        <div className="logged-in-container">
+          <p>Welcome back, {user}!</p>
+          <button onClick={() => navigate("/park")} className="navigate-button">
+            Go to Park Search
+          </button>
+          <button onClick={logout} className="logout-button">Logout</button>
+        </div>
       )}
     </div>
   );

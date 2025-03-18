@@ -1,7 +1,6 @@
 import { ReactNode, useContext } from "react";
 import { Navigate } from "react-router-dom";
-import AuthContext from "./src/context/AuthContext"; // Adjust the path based on your folder structure
-
+import AuthContext from "./src/context/AuthContext";
 interface PrivateRouteProps {
   children: ReactNode;
 }
@@ -13,9 +12,9 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
     throw new Error("AuthContext must be used within an AuthProvider");
   }
   
-  const { user } = authContext;
+  const { token } = authContext;
   
-  return user ? <>{children}</> : <Navigate to="/" />;
+  return token ? <>{children}</> : <Navigate to="/" replace />;
 };
 
 export default PrivateRoute;

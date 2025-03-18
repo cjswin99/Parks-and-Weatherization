@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "your_password",
+    "database": "parksandweather_db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

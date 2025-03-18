@@ -1,7 +1,7 @@
 -- Table for storing park details
 CREATE TABLE parks (
   id SERIAL PRIMARY KEY,
-  park_id VARCHAR(50) UNIQUE NOT NULL, -- unique identifier from the Parks API
+  park_id VARCHAR(50) UNIQUE NOT NULL, -- unique identifier from the Park API
   name TEXT NOT NULL,
   city TEXT,
   state CHAR(2) NOT NULL, -- assuming U.S. state codes (e.g., 'UT')

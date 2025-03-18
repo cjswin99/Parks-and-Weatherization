@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run client:build && npm run server",
-    "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
     "server": "cd server && npm start",
     "server:dev": "cd server && npm run dev",
     "install": "cd server && npm i && cd ../client && npm i",
     "client:build": "cd client && npm run build",
-    "client:dev": "cd client && npm run dev",
+    "client:dev": "cd client && vite",
     "build": "cd server && npm run build",
     "seed": "cd server && npm run seed",
     "render-build": "npm install && npm run build"
@@ -21,6 +21,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.9",
     "concurrently": "^9.1.2",
@@ -35,11 +37,14 @@
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "pg": "^8.14.0",
+    "pg-hstore": "^2.3.4",
     "react": "^19.0.0",
     "react-router-dom": "^7.3.0",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.37.6",
+    "sequelize-cli": "^6.6.2"
   }
 }
