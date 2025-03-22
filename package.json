@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
+    "start:dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run client:build && npm run server",
     "server": "cd server && npm start",
@@ -13,7 +13,7 @@
     "client:build": "cd client && npm run build",
     "client:dev": "cd client && vite",
     "build": "cd server && npm run build",
-    "seed": "cd server && npm run seed",
+    "seed": "ts-node --project tsconfig.seed.json scripts/seedParks.ts",
     "render-build": "npm install && npm run build"
   },
   "keywords": [],
@@ -28,7 +28,8 @@
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.9",
     "sass": "^1.85.1",
-    "typescript": "^5.7.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
     "vite": "^6.2.0",
     "wait-on": "^8.0.2"
   },
@@ -40,7 +41,7 @@
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "pg": "^8.14.0",
+    "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "react": "^19.0.0",
     "react-router-dom": "^7.3.0",

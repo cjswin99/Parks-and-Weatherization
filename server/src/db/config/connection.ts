@@ -1,19 +1,27 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 
-// Load environment variables
 dotenv.config();
 
+console.log("🔐 Loaded DB credentials:", {
+  DB_NAME: process.env.DB_NAME,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD,
+  DB_HOST: process.env.DB_HOST,
+  DB_PORT: process.env.DB_PORT,
+});
+
 const sequelize = new Sequelize(
-  process.env.DB_NAME as string,
-  process.env.DB_USER as string,
-  process.env.DB_PASSWORD as string,
+  "parksandweather_db",     // DB name
+  "postgres",               // DB user
+  "daycius",                // DB password
   {
-    host: process.env.DB_HOST || "localhost",
-    port: Number(process.env.DB_PORT) || 5432,
+    host: "localhost",
+    port: 5432,
     dialect: "postgres",
     logging: false,
   }
 );
+
 
 export default sequelize;
