@@ -1,4 +1,14 @@
 .env
-node_modules
+node_modules/
 dist/
 build/
+*.js
+*.map
+**/*.js
+**/*.map
+client/src/**/*.js
+client/src/**/*.map
+.DS_Store
+*.log
+.vscode/
+.idea/
