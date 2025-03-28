@@ -1,53 +1,36 @@
-import express, { Request, Response } from "express";
-import { authenticateToken } from "../../middleware/authMiddleware.js";
-import { Weather } from "../../models/Weather.js"; // ✅ Singular
+import express from "express";
+import fetch from "node-fetch";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
 
-// Extend Request type to include user
-interface AuthenticatedRequest extends Request {
-  user?: { id: number };
-}
+router.get("/", async (req, res) => {
+  const { lat, lon } = req.query;
 
-// GET user's weather search history (protected route)
-router.get("/", authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    if (!req.user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const searches = await Weather.findAll({ where: { userId: req.user.id } });
-    res.json(searches);
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${process.env.WEATHER_API_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
   } catch (error) {
-    console.error("Error fetching weather history:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("❌ Weather API error:", error);
+    res.status(500).json({ error: "Failed to fetch weather" });
   }
 });
 
-// POST new weather search data (protected route)
-router.post("/", authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get("/forecast", async (req, res) => {
+  const { lat, lon } = req.query;
+
   try {
-    if (!req.user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const { location, temperature, condition } = req.body;
-
-    if (!location || !temperature || !condition) {
-      return res.status(400).json({ error: "All fields are required." });
-    }
-
-    const newSearch = await Weather.create({
-      location,
-      temperature,
-      condition,
-      userId: req.user.id,
-    });
-
-    res.status(201).json(newSearch);
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${process.env.WEATHER_API_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    res.json(data);
   } catch (error) {
-    console.error("Error saving weather search:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("❌ Forecast API error:", error);
+    res.status(500).json({ error: "Failed to fetch forecast" });
   }
 });
 

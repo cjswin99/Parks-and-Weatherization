@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 const LandingPage: React.FC = () => {
-  const authContext = useContext(AuthContext);
+  const { register, login, logout, user } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -13,27 +13,29 @@ const LandingPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  if (!authContext) {
-    throw new Error("AuthContext must be used within an AuthProvider");
-  }
-
-  const { register, login, logout, user } = authContext; // ✅ Ensure `logout` is included
-
   const handleSubmit = async () => {
     if (!username.trim() || !email.trim() || !password.trim()) {
       setError("Please fill in all fields.");
       return;
     }
+
     setError("");
     setLoading(true);
+
     try {
       console.log(isNewUser ? "Registering..." : "Logging in...");
-      isNewUser ? await register(username, email, password) : await login(username, email, password);
-      navigate("/park"); // ✅ Redirect after login/signup
+      if (isNewUser) {
+        await register(username, email, password);
+      } else {
+        await login(username, email, password);
+      }
+
+      navigate("/park");
     } catch (err) {
-      setLoading(false);
       console.error("Authentication error:", err);
       setError("Authentication failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,7 +48,6 @@ const LandingPage: React.FC = () => {
 
       {error && <p className="error">{error}</p>}
 
-      {/* Show login/signup form only if no user */}
       {!user ? (
         <div className="login-container">
           <input

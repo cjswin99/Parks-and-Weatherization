@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/privateroute.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/weatherdisplay.tsx","./src/context/authcontext.tsx","./src/context/parkcontext.tsx","./src/pages/landingpage.tsx","./src/pages/parkpage.tsx","./src/service/parksservice.ts","./src/service/weatherservice.ts","./src/types/index.ts"],"version":"5.7.3"}

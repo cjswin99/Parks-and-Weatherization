@@ -3,7 +3,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { ParkProvider } from "./context/ParkContext";
 import LandingPage from "./pages/LandingPage";
 import ParkPage from "./pages/ParkPage";
-import PrivateRoute from "../PrivateRoute";
+import PrivateRoute from "./PrivateRoute";
+import './index.css';
 
 function App() {
   return (

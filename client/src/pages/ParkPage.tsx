@@ -1,129 +1,91 @@
-import React, { useState, useEffect, useContext } from "react";
-import AuthContext from "../context/AuthContext";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+import { useState } from "react";
+import WeatherDisplay from "@/components/WeatherDisplay";
 
 interface Park {
   id: string;
   fullName: string;
+  description: string;
+  latitude: string;
+  longitude: string;
+  images?: { url: string; title: string }[];
 }
 
-const ParkPage: React.FC = () => {
-  const { token } = useContext(AuthContext);
+const ParkPage = () => {
   const [stateCode, setStateCode] = useState("");
   const [parks, setParks] = useState<Park[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [selectedPark, setSelectedPark] = useState<Park | null>(null);
+  const [error, setError] = useState<string>("");
 
-  const fetchParks = async () => {
-    if (!stateCode) {
-      setError("Please select a state.");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
+  const handleSearch = async () => {
     try {
-      console.log("Fetching parks from API...");
-      const response = await fetch(`${API_BASE_URL}/api/parks?stateCode=${stateCode}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch parks.");
-      }
-
+      setSelectedPark(null);
+      const response = await fetch(`/api/parks/${stateCode}`);
       const data = await response.json();
-      console.log("API Response:", data);
-      setParks(data.data || []);
+      if (data.length === 0) {
+        setError("No parks found for this state code.");
+      } else {
+        setError("");
+        setParks(data);
+      }
     } catch (err) {
-      setError("Error fetching parks. Try again.");
-      console.error("Fetch Error:", err);
-    } finally {
-      setLoading(false);
+      console.error("❌ Parks API error:", err);
+      setError("Failed to load parks.");
     }
   };
 
   return (
-    <div className="container">
-      <h1>Find National Parks</h1>
-      <label>
-        Select State:
-        <select value={stateCode} onChange={(e) => setStateCode(e.target.value)}>
-        <option value="">-- Select a State --</option>
-        <option value="AL">Alabama</option>
-        <option value="AK">Alaska</option>
-        <option value="AZ">Arizona</option>
-        <option value="AR">Arkansas</option>
-        <option value="CA">California</option>
-        <option value="CO">Colorado</option>
-        <option value="CT">Connecticut</option>
-        <option value="DE">Delaware</option>
-        <option value="FL">Florida</option>
-        <option value="GA">Georgia</option>
-        <option value="HI">Hawaii</option>
-        <option value="ID">Idaho</option>
-        <option value="IL">Illinois</option>
-        <option value="IN">Indiana</option>
-        <option value="IA">Iowa</option>
-        <option value="KS">Kansas</option>
-        <option value="KY">Kentucky</option>
-        <option value="LA">Louisiana</option>
-        <option value="ME">Maine</option>
-        <option value="MD">Maryland</option>
-        <option value="MA">Massachusetts</option>
-        <option value="MI">Michigan</option>
-        <option value="MN">Minnesota</option>
-        <option value="MS">Mississippi</option>
-        <option value="MO">Missouri</option>
-        <option value="MT">Montana</option>
-        <option value="NE">Nebraska</option>
-        <option value="NV">Nevada</option>
-        <option value="NH">New Hampshire</option>
-        <option value="NJ">New Jersey</option>
-        <option value="NM">New Mexico</option>
-        <option value="NY">New York</option>
-        <option value="NC">North Carolina</option>
-        <option value="ND">North Dakota</option>
-        <option value="OH">Ohio</option>
-        <option value="OK">Oklahoma</option>
-        <option value="OR">Oregon</option>
-        <option value="PA">Pennsylvania</option>
-        <option value="RI">Rhode Island</option>
-        <option value="SC">South Carolina</option>
-        <option value="SD">South Dakota</option>
-        <option value="TN">Tennessee</option>
-        <option value="TX">Texas</option>
-        <option value="UT">Utah</option>
-        <option value="VT">Vermont</option>
-        <option value="VA">Virginia</option>
-        <option value="WA">Washington</option>
-        <option value="WV">West Virginia</option>
-        <option value="WI">Wisconsin</option>
-        <option value="WY">Wyoming</option>
-        </select>
-      </label>
-      <button onClick={fetchParks} disabled={loading}>
-        {loading ? "Searching..." : "Find Parks"}
-      </button>
+    <div className="app-container">
+      <h1 className="page-title">Find a Park</h1>
 
-      {error && <p className="error">{error}</p>}
+      <div className="search-bar">
+        <input
+          type="text"
+          value={stateCode}
+          onChange={(e) => setStateCode(e.target.value.toUpperCase())}
+          placeholder="Enter state code (e.g., UT)"
+          className="search-input"
+        />
+        <button onClick={handleSearch} className="search-btn">
+          Search State
+        </button>
+      </div>
 
-      <ul>
-        {parks.length > 0 ? (
-          parks.map((park) => (
-            <li key={park.id}>
-              <a href={`/weather/${park.id}`}>{park.fullName}</a>
-            </li>
-          ))
-        ) : (
-          <p>No parks found.</p>
-        )}
-      </ul>
+      {error && <p className="error-msg">{error}</p>}
+
+      <div className="park-grid">
+        {parks.map((park) => (
+          <div
+            key={park.id}
+            className="park-card"
+            onClick={() => setSelectedPark(park)}
+          >
+            <h2>{park.fullName}</h2>
+          </div>
+        ))}
+      </div>
+
+      {selectedPark && (
+        <div className="selected-park-section">
+          <h2 className="page-title">{selectedPark.fullName}</h2>
+          <p>{selectedPark.description}</p>
+
+          {selectedPark.images && selectedPark.images.length > 0 && (
+            <div className="park-images-grid">
+              {selectedPark.images.slice(0, 4).map((img, index) => (
+                <div key={index} className="park-image-card">
+                  <img src={img.url} alt={img.title} />
+                  <p>{img.title}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <WeatherDisplay
+            lat={parseFloat(selectedPark.latitude)}
+            lon={parseFloat(selectedPark.longitude)}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,14 +1,17 @@
 {
 	"compilerOptions": {
+		
 	  "target": "ES2020",
-	  "module": "NodeNext",
-	  "moduleResolution": "NodeNext",
-	  "baseUrl": "./src",
+	  "module": "CommonJS",
+	  "moduleResolution": "Node",
+	  "baseUrl": "src",
 	  "paths": {
+		"@services/*": ["service/*"],
 		"@middleware/*": ["middleware/*"],
 		"@routes/*": ["routes/*"],
 		"@models/*": ["models/*"],
-		"@db/*": ["db/*"]
+		"@db/*": ["db/*"],
+		"@/*": ["*"]
 	  },
 	  "rootDir": "./src",
 	  "outDir": "./dist",
