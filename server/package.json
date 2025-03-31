@@ -25,6 +25,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "^2.7.0",
+    "pg": "^8.14.1",
     "sequelize": "^6.37.6",
     "uuid": "^9.0.1"
   },
